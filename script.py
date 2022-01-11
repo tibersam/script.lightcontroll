@@ -20,8 +20,11 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.mode = 2
             self.lightcontroller.step = 1
             self.lightcontroller.set_rgb( 0, 0, 0)
-            self.lightcontroller.set_rgb_limit( 2, 2, 2, 30, 30)
+            self.lightcontroller.set_rgb_limit( 100, 100, 100, 120, 95, mode=2, delay=4)
+            self.lightcontroller.set_rgb_limit( 100, 100, 100, 350, 87, mode=1)
+            self.lightcontroller.set_rgb_limit( 100, 100, 100, 0 , 10, mode=1)
             self.lightcontroller.set_lights( False, delay=20)
+            self.lightcontroller.mode = 1
 
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
@@ -47,7 +50,7 @@ class XBMCPlayer( xbmc.Player ):
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
         self.lightcontroller.mode = 1
-        self.lightcontroller.step = 4
+        self.lightcontroller.step = 2
         self.lightcontroller.set_rgb( 255, 255, 255)
 
     def onPlayBackPaused( self ):
@@ -60,7 +63,11 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.set_lights(True)
         self.lightcontroller.mode = 1
         self.lightcontroller.step = 2
-        self.lightcontroller.set_rgb( 100, 100, 100)
+        self.lightcontroller.set_rgb_limit( 100, 100, 100, 60, 155, mode=1)
+        self.lightcontroller.set_rgb_limit( 100, 100, 100, 0 , 60, mode=2)
+        self.lightcontroller.set_rgb_limit( 100, 100, 100, 350, 87, mode=2, delay=10)
+        self.lightcontroller.step = 4
+        self.lightcontroller.set_rgb( 150, 150, 150, delay=20)
 
     def onPlayBackResumed( self ):
         # Will be called when user stops xbmc playing a file
@@ -70,7 +77,7 @@ class XBMCPlayer( xbmc.Player ):
         self.lightcontroller.abortprevious()
         if self.lightcontroller.atx:
             self.lightcontroller.mode = 0
-            self.lightcontroller.set_rgb( 10, 10, 10)
+            self.lightcontroller.set_rgb( 20, 20, 20)
             self.lightcontroller.set_lights( False, delay=5)
 
 player = XBMCPlayer()
