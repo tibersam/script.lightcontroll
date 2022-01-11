@@ -61,9 +61,9 @@ class XBMCPlayer( xbmc.Player ):
 
 player = XBMCPlayer()
 xbmc.log("Started Lightcontroller")
-xbmc.sleep(10)
-while(not xbmc.abortRequested):
-    xbmc.sleep(100)
+monitor = xbmc.Monitor()
+while(not monitor.abortRequested()):
+    monitor.waitForAbort(60)
 
 del player
 xbmc.sleep(10)
