@@ -1,0 +1,3 @@
+[submodule "lightcontroller"]
+	path = lightcontroller
+	url = https://github.com/tibersam/lightcontroller-stm32f407.git
