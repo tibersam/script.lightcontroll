@@ -91,7 +91,7 @@ def script():
     player = XBMCPlayer()
     xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
     monitor = xbmc.Monitor()
-    while(not monitor.abortRequested()):
+    while(not monitor.abortRequested() and player.lightcontroller.bthread.is_alive()):
         monitor.waitForAbort(60)
     xbmc.log("LightController ",level=xbmc.LOGINFO)
     del player
