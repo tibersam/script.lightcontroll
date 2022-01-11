@@ -5,14 +5,16 @@ class XBMCPlayer( xbmc.Player ):
 
     def __init__( self, *args ):
         self.lightcontroller = LightController()
-        xbmc.log("Initialised LightController")
+        self.started_playback = False
+        xbmc.log("Initialised LightController", level=xbmc.LOGINFO)
         pass
 
     def onAVStarted( self ):
         # Will be called when xbmc starts playing a file
         if not self.isPlayingVideo():
             return
-        xbmc.log( "LED Status: Playback Started, LED ON" )
+        self.started_playback = True
+        xbmc.log( "LightControll: LED Status: Playback Started, LED ON", level=xbmc.LOGINFO)
         self.lightcontroller.abortprevious()
         if self.lightcontroller.atx:
             self.lightcontroller.mode = 2
@@ -23,9 +25,10 @@ class XBMCPlayer( xbmc.Player ):
 
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
-        if not self.isPlayingVideo():
+        if self.started_playback is False:
             return
-        xbmc.log( "LED Status: Playback Stopped, LED OFF" )
+        self.started_playback = False
+        xbmc.log( "LightControll: LED Status: Playback Stopped, LED OFF", level=xbmc.LOGINFO )
         self.lightcontroller.abortprevious()
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
@@ -36,9 +39,10 @@ class XBMCPlayer( xbmc.Player ):
 
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
-        if not self.isPlayingVideo():
+        if self.started_playback is False:
             return
-        xbmc.log( "LED Status: Playback Stopped, LED OFF" )
+        self.started_playback = False
+        xbmc.log( "LightControll: LED Status: Playback Stopped, LED OFF", level=xbmc.LOGINFO )
         self.lightcontroller.abortprevious()
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
@@ -48,9 +52,9 @@ class XBMCPlayer( xbmc.Player ):
 
     def onPlayBackPaused( self ):
         # Will be called when user Pauses xbmc playing a file
-        if not self.isPlayingVideo():
+        if self.started_playback is False:
             return
-        xbmc.log( "LED Status: Playback Paused, LED ON BUT STILL" )
+        xbmc.log( "LightControll: LED Status: Playback Paused, LED ON BUT STILL", level=xbmc.LOGINFO )
         self.lightcontroller.abortprevious()
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
@@ -60,9 +64,9 @@ class XBMCPlayer( xbmc.Player ):
 
     def onPlayBackResumed( self ):
         # Will be called when user stops xbmc playing a file
-        if not self.isPlayingVideo():
+        if self.started_playback is False:
             return
-        xbmc.log( "LED Status: Playback Resumed, LED ON" )
+        xbmc.log( "LightControll: LED Status: Playback Resumed, LED ON" )
         self.lightcontroller.abortprevious()
         if self.lightcontroller.atx:
             self.lightcontroller.mode = 0
@@ -70,11 +74,11 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.set_lights( False, delay=5)
 
 player = XBMCPlayer()
-xbmc.log("Started Lightcontroller")
+xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
 monitor = xbmc.Monitor()
 while(not monitor.abortRequested()):
     monitor.waitForAbort(60)
 
 del player
 xbmc.sleep(10)
-xbmc.log( "LED Status: Script Stopped" )
+xbmc.log( "LightControll: LED Status: Script Stopped", level=xbmc.LOGINFO)
