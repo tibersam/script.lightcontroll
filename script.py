@@ -1,11 +1,13 @@
 import xbmc
 from lightcontroller import LightController
+import time
 
 class XBMCPlayer( xbmc.Player ):
 
     def __init__( self, *args ):
         self.lightcontroller = LightController()
         self.started_playback = False
+        self.last_executed = time.time() - 20
         xbmc.log("Initialised LightController", level=xbmc.LOGINFO)
         pass
 
@@ -20,11 +22,15 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.mode = 2
             self.lightcontroller.step = 1
             self.lightcontroller.set_rgb( 0, 0, 0)
-            self.lightcontroller.set_rgb_limit( 50, 50, 50, 120, 95, mode=2, delay=4)
-            self.lightcontroller.set_rgb_limit( 50, 50, 50, 350, 87, mode=1)
-            self.lightcontroller.set_rgb_limit( 50, 50, 50, 0 , 10, mode=1)
-            self.lightcontroller.set_lights( False, delay=20)
+            if(time.time() - self.last_executed > 10):
+                self.lightcontroller.set_rgb_limit( 50, 50, 50, 120, 95, mode=2, delay=4)
+                self.lightcontroller.set_rgb_limit( 50, 50, 50, 350, 87, mode=1)
+                self.lightcontroller.set_rgb_limit( 50, 50, 50, 0 , 10, mode=1)
+                self.lightcontroller.set_lights( False, delay=20)
+            else:
+                self.lightcontroller.set_lights( False)
             self.lightcontroller.mode = 1
+            self.last_executed = time.time()
 
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
@@ -33,7 +39,6 @@ class XBMCPlayer( xbmc.Player ):
         self.started_playback = False
         xbmc.log( "LightControll: LED Status: Playback Stopped, LED OFF", level=xbmc.LOGINFO )
         self.lightcontroller.abortprevious()
-        self.lightcontroller.set_rgb( 0, 0, 0, delay=3)
         self.lightcontroller.mode = 0
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
@@ -42,6 +47,7 @@ class XBMCPlayer( xbmc.Player ):
         self.lightcontroller.step = 4
         self.lightcontroller.set_rgb( 50, 50, 50)
         self.lightcontroller.set_rgb( 255, 255, 255, delay=30)
+        self.last_executed = time.time()
 
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
@@ -50,7 +56,6 @@ class XBMCPlayer( xbmc.Player ):
         self.started_playback = False
         xbmc.log( "LightControll: LED Status: Playback Stopped, LED OFF", level=xbmc.LOGINFO )
         self.lightcontroller.abortprevious()
-        self.lightcontroller.set_rgb( 0, 0, 0, delay=3)
         self.lightcontroller.mode = 0
         if not self.lightcontroller.atx:
             self.lightcontroller.set_lights(True)
@@ -58,6 +63,7 @@ class XBMCPlayer( xbmc.Player ):
         self.lightcontroller.mode = 1
         self.lightcontroller.step = 2
         self.lightcontroller.set_rgb( 255, 255, 255)
+        self.last_executed = time.time()
 
     def onPlayBackPaused( self ):
         # Will be called when user Pauses xbmc playing a file
@@ -75,6 +81,7 @@ class XBMCPlayer( xbmc.Player ):
         self.lightcontroller.set_rgb_limit( 50, 50, 50, 350, 87, mode=1, delay=1)
         self.lightcontroller.step = 4
         self.lightcontroller.set_rgb( 150, 150, 150, delay=20)
+        self.last_executed = time.time()
 
     def onPlayBackResumed( self ):
         # Will be called when user stops xbmc playing a file
@@ -86,6 +93,7 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.mode = 0
             self.lightcontroller.set_rgb( 20, 20, 20)
             self.lightcontroller.set_lights( False, delay=5)
+            self.last_executed = time.time()
 
 def script():
     player = XBMCPlayer()
