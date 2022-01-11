@@ -87,12 +87,17 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.set_rgb( 20, 20, 20)
             self.lightcontroller.set_lights( False, delay=5)
 
-player = XBMCPlayer()
-xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
-monitor = xbmc.Monitor()
-while(not monitor.abortRequested()):
-    monitor.waitForAbort(60)
+def script():
+    player = XBMCPlayer()
+    xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
+    monitor = xbmc.Monitor()
+    while(not monitor.abortRequested()):
+        monitor.waitForAbort(60)
+    xbmc.log("LightController ",level=xbmc.LOGINFO)
+    del player
+    del monitor
+    xbmc.sleep(10)
+    xbmc.log( "LightControll: LED Status: Script Stopped", level=xbmc.LOGINFO)
 
-del player
-xbmc.sleep(10)
-xbmc.log( "LightControll: LED Status: Script Stopped", level=xbmc.LOGINFO)
+if __name__ == '__main__':
+    script()
