@@ -97,14 +97,14 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.mode=1
             self.last_executed = time.time()
 
+def show_notification(msg, icon, title='Lightcontroller', displaytime=3000):
+    xbmc.executebuiltin(f'Notification({title}, {msg}, {displaytime}, {icon})')
+    
 def script():
     player = XBMCPlayer()
     addon = xbmcaddon.Addon()
     icon = addon.getAddonInfo('icon')
-    displaytime = 3000
-    msg = "Started script succesfully :) Now running"
-    title = 'Lightcontroller'
-    xbmc.executebuiltin(f'Notification({title}, {msg}, {displaytime}, {icon})')
+    show_notification( "Started script succesfully :) Now running", icon)
     xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
     monitor = xbmc.Monitor()
     while((not monitor.abortRequested()) and player.lightcontroller.backgroundthreadalive()):
@@ -112,8 +112,7 @@ def script():
     xbmc.log("LightController ",level=xbmc.LOGINFO)
     del player
     del monitor
-    msg = "Stopped script succesfully :)"
-    xbmc.executebuiltin(f'Notification({title}, {msg}, {displaytime}, {icon})')
+    show_notification( "Stopped script succesfully :)", icon)
     del icon
     del addon
     xbmc.sleep(10)
