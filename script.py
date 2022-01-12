@@ -1,4 +1,5 @@
 import xbmc
+import xbmcaddon
 from lightcontroller import LightController
 import time
 
@@ -93,10 +94,17 @@ class XBMCPlayer( xbmc.Player ):
             self.lightcontroller.mode = 0
             self.lightcontroller.set_rgb( 20, 20, 20)
             self.lightcontroller.set_lights( False, delay=5)
+            self.lightcontroller.mode=1
             self.last_executed = time.time()
 
 def script():
     player = XBMCPlayer()
+    addon = xbmcaddon.Addon()
+    icon = addon.getAddonInfo('icon')
+    displaytime = 3000
+    msg = "Started script succesfully :) Now running"
+    title = 'Lightcontroller'
+    xbmc.executebuiltin(f'Notification({title}, {msg}, {displaytime}, {icon})')
     xbmc.log("Started Lightcontroller", level=xbmc.LOGINFO)
     monitor = xbmc.Monitor()
     while((not monitor.abortRequested()) and player.lightcontroller.backgroundthreadalive()):
@@ -104,6 +112,10 @@ def script():
     xbmc.log("LightController ",level=xbmc.LOGINFO)
     del player
     del monitor
+    msg = "Stopped script succesfully :)"
+    xbmc.executebuiltin(f'Notification({title}, {msg}, {displaytime}, {icon})')
+    del icon
+    del addon
     xbmc.sleep(10)
     xbmc.log( "LightControll: LED Status: Script Stopped", level=xbmc.LOGINFO)
 
