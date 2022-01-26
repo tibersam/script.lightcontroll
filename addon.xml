@@ -13,12 +13,5 @@
 	<description>Changes light of homecinema depending on player state</description>
 	<website>https://github.com/tibersam/script.lightcontroll</website>
 	<source>https://github.com/tibersam/script.lightcontroll</source>
-	<platform>linux</platform>
-	<news>
-		v0.1.15
-		- try to fix metadata problem
-		v0.1.14
-		-Moved status notification call into own function
-	</news>
   </extension>
 </addon>
